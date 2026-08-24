@@ -26,6 +26,8 @@ services:
     depends_on:
       mssql:
         condition: service_healthy
+    environment:
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
     volumes:
       - ./python_app:/app
       - ./data:/data
