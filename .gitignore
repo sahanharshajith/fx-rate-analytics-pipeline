@@ -1,0 +1,25 @@
+# secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+venv/
+
+# data (bronze JSON files can be large / regenerable)
+data/
+
+# node
+node_modules/
+.next/
+
+# dbt
+dbt_fx/target/
+dbt_fx/logs/
+
+# os
+.DS_Store
+
+.history
+
+.vs
