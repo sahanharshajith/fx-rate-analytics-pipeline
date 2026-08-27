@@ -24,3 +24,7 @@ dbt_fx/logs/
 .history
 
 .vs
+
+dashboard/node_modules/
+dashboard/.next/
+dashboard/.env.local
