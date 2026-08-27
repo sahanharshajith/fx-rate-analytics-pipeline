@@ -5,6 +5,7 @@
 __pycache__/
 *.pyc
 venv/
+dbt_env/
 
 # data (bronze JSON files can be large / regenerable)
 data/

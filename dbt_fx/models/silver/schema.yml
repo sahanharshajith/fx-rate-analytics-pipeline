@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_fx_rates_clean
+    description: "Cleaned FX rates, one row per currency pair per day per source"
+    columns:
+      - name: base_currency
+        tests:
+          - not_null
+      - name: target_currency
+        tests:
+          - not_null
+      - name: exchange_rate
+        tests:
+          - not_null

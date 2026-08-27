@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: silver
+    schema: silver
+    tables:
+      - name: stg_fx_rates
+        description: "Cleaned FX rates loaded by the Python/PySpark ingestion pipeline (pre-dbt)"
