@@ -28,3 +28,7 @@ dbt_fx/logs/
 dashboard/node_modules/
 dashboard/.next/
 dashboard/.env.local
+
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
