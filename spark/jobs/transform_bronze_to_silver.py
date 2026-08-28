@@ -5,19 +5,20 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType, StructField, StringType, DoubleType
+from pyspark.sql.functions import col
 
 # On Windows there is no 'python3' executable; tell PySpark to use the
 # same interpreter that is running this script (works inside a venv too).
 os.environ["PYSPARK_PYTHON"] = sys.executable
 os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
-from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, StringType, DoubleType
-from pyspark.sql.functions import col
 
 load_dotenv()
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 BRONZE_DIR = PROJECT_ROOT / "data" / "bronze"
+
 
 def parse_frankfurter(data: dict, filename: str) -> list:
     base = data["base"]
@@ -26,6 +27,7 @@ def parse_frankfurter(data: dict, filename: str) -> list:
              "exchange_rate": float(rate), "rate_date": rate_date,
              "source_api": "frankfurter", "source_file": filename}
             for target, rate in data["rates"].items()]
+
 
 def parse_open_er(data: dict, filename: str) -> list:
     base = data["base_code"]
@@ -38,17 +40,16 @@ def parse_open_er(data: dict, filename: str) -> list:
              "source_api": "open_er", "source_file": filename}
             for target, rate in data["rates"].items()]
 
+
 def parse_record(filename, content):
-    """
-    Detect which API's schema this file matches, 
-    then flatten it into dict rows.
-    """
+    """Detect which API's schema this file matches, then flatten it into dict rows."""
     data = json.loads(content)
     if "base" in data and "date" in data:
         return parse_frankfurter(data, filename)
     elif "base_code" in data:
         return parse_open_er(data, filename)
     return []  # unknown schema — skip rather than crash the whole batch
+
 
 def main():
     spark = (
@@ -119,6 +120,7 @@ def main():
     finally:
         os.unlink(tmp_file.name)
     spark.stop()
+
 
 if __name__ == "__main__":
     main()

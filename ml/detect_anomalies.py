@@ -60,7 +60,7 @@ def main():
     conn = pyodbc.connect(CONN_STR)
     try:
         df = load_volatility_data(conn)
-        print(f"Loaded {len(df)} rows across {df.groupby(['base_currency','target_currency']).ngroups} currency pairs")
+        print(f"Loaded {len(df)} rows across {df.groupby(['base_currency', 'target_currency']).ngroups} currency pairs")
 
         df = engineer_features(df)
 
@@ -93,4 +93,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main()

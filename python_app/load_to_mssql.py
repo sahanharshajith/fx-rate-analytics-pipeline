@@ -30,6 +30,7 @@ else:
         f"TrustServerCertificate={os.getenv('MSSQL_TRUST_CERT', 'yes')};"
     )
 
+
 def get_latest_files() -> list[Path]:
     """Get the latest JSON file for each data source provider (frankfurter, open_er)."""
     providers = ["frankfurter", "open_er"]
@@ -41,6 +42,7 @@ def get_latest_files() -> list[Path]:
     if not latest_files:
         raise FileNotFoundError("No bronze JSON files found in data/bronze. Run fetch_fx_data.py first.")
     return latest_files
+
 
 def parse_record(data: dict, filename: str) -> tuple[str, list[tuple]]:
     """
@@ -72,6 +74,7 @@ def parse_record(data: dict, filename: str) -> tuple[str, list[tuple]]:
 
     return "unknown", []
 
+
 def load_bronze_raw(conn, source_api: str, raw_json_text: str):
     """Store the raw unmodified JSON into bronze.raw_api_responses"""
     cursor = conn.cursor()
@@ -80,6 +83,7 @@ def load_bronze_raw(conn, source_api: str, raw_json_text: str):
         source_api, raw_json_text
     )
     conn.commit()
+
 
 def load_silver_rates(conn, rows: list[tuple]):
     """Upsert standardized exchange rate records into silver.stg_fx_rates"""
@@ -101,7 +105,7 @@ def load_silver_rates(conn, rows: list[tuple]):
             INSERT (base_currency, target_currency, exchange_rate, rate_date, source_api)
             VALUES (?, ?, ?, ?, ?);
     """
-    
+
     # Format params: (base, target, date, source, rate, base, target, rate, date, source)
     param_list = [
         (r[0], r[1], r[3], r[4], r[2], r[0], r[1], r[2], r[3], r[4])
@@ -110,6 +114,7 @@ def load_silver_rates(conn, rows: list[tuple]):
     cursor.executemany(merge_sql, param_list)
     conn.commit()
     print(f"Upserted {len(rows)} rate records into silver.stg_fx_rates")
+
 
 def main():
     latest_files = get_latest_files()
@@ -120,7 +125,7 @@ def main():
             raw_text = file_path.read_text(encoding="utf-8")
             data = json.loads(raw_text)
             source_api, rows = parse_record(data, file_path.name)
-            
+
             if not rows:
                 print(f"Skipping unrecognized schema in {file_path.name}")
                 continue
@@ -129,6 +134,7 @@ def main():
             load_silver_rates(conn, rows)
     finally:
         conn.close()
+
 
 if __name__ == "__main__":
     main()
