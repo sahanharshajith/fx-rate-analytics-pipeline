@@ -1,11 +1,11 @@
+import os
+
 import pandas as pd
 import pyodbc
 from dotenv import load_dotenv
 from sklearn.ensemble import IsolationForest
 
 load_dotenv()
-
-import os
 
 CONN_STR = (
     "DRIVER={ODBC Driver 18 for SQL Server};"

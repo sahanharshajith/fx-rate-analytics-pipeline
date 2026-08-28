@@ -1,9 +1,9 @@
+import os
+
 import pyodbc
 from dotenv import load_dotenv
 
 load_dotenv()
-
-import os
 
 CONN_STR = (
     "DRIVER={ODBC Driver 18 for SQL Server};"
