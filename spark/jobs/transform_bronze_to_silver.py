@@ -58,7 +58,7 @@ def main():
         .master("local[*]")
         .config(
             "spark.jars",
-            "file:///C:/Users/Acer/.ivy2/jars/com.microsoft.sqlserver_mssql-jdbc-12.8.1.jre11.jar"
+            "file:///mnt/c/Users/Acer/.ivy2/jars/com.microsoft.sqlserver_mssql-jdbc-12.8.1.jre11.jar"
         )
         .getOrCreate()
     )
@@ -104,16 +104,33 @@ def main():
 
         print(f"Cleaned batch: {clean_df.count()} rows ready for staging")
 
-        jdbc_url = "jdbc:sqlserver://localhost:1433;databaseName=FxAnalytics;encrypt=true;trustServerCertificate=true"
+        mssql_server = os.environ["MSSQL_SERVER"]
+        mssql_port = os.environ.get("MSSQL_PORT", "1433")
+        mssql_database = os.environ["MSSQL_DATABASE"]
+        mssql_user = os.environ["MSSQL_USER"]
+        mssql_password = os.environ["MSSQL_SA_PASSWORD"]
+
+        jdbc_url = (
+            f"jdbc:sqlserver://{mssql_server}:{mssql_port};"
+            f"databaseName={mssql_database};"
+            "encrypt=true;"
+            "trustServerCertificate=true;"
+        )
+
+        print(
+            f"Connecting to SQL Server at {mssql_server}, "
+            f"database={mssql_database}, user={mssql_user}"
+        )
+
         (
             clean_df.write
             .format("jdbc")
             .option("url", jdbc_url)
             .option("dbtable", "silver.stg_fx_rates_staging")
-            .option("user", "sa")
-            .option("password", os.environ["MSSQL_SA_PASSWORD"])
+            .option("user", mssql_user)
+            .option("password", mssql_password)
             .option("driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver")
-            .mode("overwrite")  # staging table is always a fresh snapshot of this batch
+            .mode("overwrite")
             .save()
         )
         print("Staging table loaded.")

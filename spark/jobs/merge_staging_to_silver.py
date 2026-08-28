@@ -3,11 +3,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import os
+
 CONN_STR = (
     "DRIVER={ODBC Driver 18 for SQL Server};"
-    "SERVER=localhost,1433;DATABASE=FxAnalytics;"
-    "Trusted_Connection=yes;"
-    "Encrypt=yes;TrustServerCertificate=yes;"
+    f"SERVER={os.getenv('MSSQL_SERVER')},{os.getenv('MSSQL_PORT', '1433')};"
+    f"DATABASE={os.getenv('MSSQL_DATABASE', 'FxAnalytics')};"
+    f"UID={os.getenv('MSSQL_USER')};"
+    f"PWD={os.getenv('MSSQL_SA_PASSWORD')};"
+    "Encrypt=yes;"
+    "TrustServerCertificate=yes;"
 )
 
 MERGE_SQL = """
