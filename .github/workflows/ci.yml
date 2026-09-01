@@ -61,4 +61,10 @@ jobs:
 
       - name: dbt parse
         working-directory: dbt_fx
-        run: dbt parse
+        env:
+          MSSQL_SERVER: localhost
+          MSSQL_PORT: "1433"
+          MSSQL_DATABASE: FxAnalytics
+          MSSQL_USER: sa
+          MSSQL_SA_PASSWORD: dummy_password
+        run: dbt parse --profiles-dir .

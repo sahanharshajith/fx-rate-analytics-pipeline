@@ -181,4 +181,3 @@ def get_summary(conn=Depends(get_db)):
         "total_anomalies": total_anomalies,
         "pairs": pairs if pairs else ["USD/EUR", "USD/GBP", "USD/JPY"],
     }
-
