@@ -1,0 +1,15 @@
+dbt_fx:
+  target: docker
+  outputs:
+    docker:
+      type: sqlserver
+      driver: "ODBC Driver 18 for SQL Server"
+      server: "{{ env_var('MSSQL_SERVER') }}"
+      port: "{{ env_var('MSSQL_PORT', '1433') | as_number }}"
+      database: "{{ env_var('MSSQL_DATABASE', 'FxAnalytics') }}"
+      schema: gold
+      UID: "{{ env_var('MSSQL_USER', 'sa') }}"
+      PWD: "{{ env_var('MSSQL_SA_PASSWORD') }}"
+      encrypt: True
+      trust_cert: True
+      threads: 4

@@ -1,0 +1,6 @@
+pyodbc==5.1.0
+requests==2.31.0
+python-dotenv==1.2.3
+pyspark==3.5.3
+scikit-learn==1.5.2
+pandas==2.2.3

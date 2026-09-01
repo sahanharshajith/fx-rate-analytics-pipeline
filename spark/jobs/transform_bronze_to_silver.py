@@ -52,14 +52,13 @@ def parse_record(filename, content):
 
 
 def main():
+    jdbc_jar_path = os.getenv("SPARK_JDBC_JAR", "/opt/spark-jars/mssql-jdbc.jar")
+
     spark = (
         SparkSession.builder
         .appName("FxSilverBatchLoad")
         .master("local[*]")
-        .config(
-            "spark.jars",
-            "file:///mnt/c/Users/Acer/.ivy2/jars/com.microsoft.sqlserver_mssql-jdbc-12.8.1.jre11.jar"
-        )
+        .config("spark.jars", jdbc_jar_path)
         .getOrCreate()
     )
     spark.sparkContext.setLogLevel("WARN")  # Spark's default INFO logging is very noisy
